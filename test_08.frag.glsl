@@ -7,7 +7,7 @@ uniform vec2 u_mouse;
 uniform float u_time;
 
 const float ZOOM  = 1.0;
-const float LAYERS = 11.;
+const float LAYERS = 7.;
 
 float Hash21(vec2 p) {
   p = fract(p * vec2(123.45, 456.78));
@@ -23,7 +23,7 @@ mat2 Rot(float a) {
 float Star(in vec2 position, in float radius) {
   float length = length(position);
   float color =  radius / length;
-  return color * smoothstep(0.99, 0.01, length);
+  return color * smoothstep(0.99, 0.1, length);
 }
 
 vec3 StarLayer(in vec2 coord) {
@@ -51,7 +51,7 @@ vec3 StarLayer(in vec2 coord) {
       float size = fract(rand * 73.4);
 
       // Color star
-      float r = fract(rand * 133.1) * 0.40;
+      float r = fract(rand * 133.1) * 0.20;
       float g = fract(rand * 193.3) * 0.05;
       float b = fract(rand * 212.1) * 0.25;
       color += star * vec3(r, g, b) * size;
@@ -72,14 +72,14 @@ void main() {
   coord *= ZOOM;
 
   // Time
-  float time = u_time * .025;
+  float time = u_time * .05;
 
   // Mouse
   // coord += mouse.xy * 1.;
   vec2 parallax = mouse * 0.;
   
   // Rotate
-  coord *= Rot(time * 0.5);
+  // coord *= Rot(time * 0.5);
 
   // Create canvas
   vec3 canvas = vec3(0);
@@ -88,7 +88,7 @@ void main() {
   for(float i = 0.; i < 1.0; i += 1.0 / LAYERS) {
     float depth = fract(i + time);
     float fade = depth * smoothstep(1.0, 0.95, depth) * smoothstep(0.2, 0.5, depth);
-    float scale = mix(20.0, 0.5, depth) / 2.;
+    float scale = mix(20.0, 0.5, depth) / 1.;
     float offset = i * 420.;
     canvas += StarLayer(coord * scale + offset + (mouse*parallax)) * fade;
   }
